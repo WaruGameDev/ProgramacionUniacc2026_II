@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     private float originalGravityScale;
     public float prebufferTime = .2f;
     private float currentPrebufferTime;
+    public float coyoteJumpTime = .2f;
+    private float currentCoyoteJumpTime;
     private bool jumping = false;
 
     private void Start() 
@@ -34,14 +36,30 @@ public class PlayerController : MonoBehaviour
         if(Input.GetButtonDown("Jump"))
         {
             currentPrebufferTime = prebufferTime;
+            if(!jumping && rb.linearVelocityY < 0)
+            {
+                currentCoyoteJumpTime = coyoteJumpTime;
+            }
         }
-        jumping = !IsGrounded();
-        if(currentPrebufferTime >0 && IsGrounded() && !jumping)
+
+        if(currentCoyoteJumpTime > 0)
         {
+            currentCoyoteJumpTime -= 1 * Time.deltaTime;
+        }
+        if(jumping && IsGrounded() && rb.linearVelocityY == 0)
+        {
+            jumping = false;
+        }     
+
+        if(currentPrebufferTime >0 && IsGrounded() 
+        && !jumping || ( currentCoyoteJumpTime >0&&!jumping))
+        {
+            jumping = true;
             rb.linearVelocityY = 0;
+            currentCoyoteJumpTime = 0;
+            currentPrebufferTime = 0;
             rb.AddForce(Vector2.up * forceJump, ForceMode2D.Impulse);
             
-            jumping = true;
         }    
 
         if(rb.linearVelocityY >0 )
