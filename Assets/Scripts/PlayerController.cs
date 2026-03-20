@@ -8,10 +8,14 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rb;
     public Transform groundCheck;
     public float groundCheckRadius = .2f;
+    public float lowMultiplier = 2;
+    public float fallMultiplier =2.5f;
+    private float originalGravityScale;
 
     private void Start() 
     {
-        rb = GetComponent<Rigidbody2D>();        
+        rb = GetComponent<Rigidbody2D>();
+        originalGravityScale = rb.gravityScale;               
     }
     private void Update() 
     {
@@ -22,7 +26,24 @@ public class PlayerController : MonoBehaviour
         if(Input.GetButtonDown("Jump") && IsGrounded())
         {
             rb.AddForce(Vector2.up * forceJump, ForceMode2D.Impulse);
-        }        
+        }    
+
+        if(rb.linearVelocityY >0 )
+        {
+            rb.gravityScale = lowMultiplier;
+            if(!Input.GetButton("Jump"))
+            {
+                rb.linearVelocityY *= .95f;
+            }
+        }    
+        else if(rb.linearVelocityY <0 )
+        {
+            rb.gravityScale = fallMultiplier;
+        }
+        else
+        {
+            rb.gravityScale = originalGravityScale;
+        }
     }
     bool IsGrounded()
     {
