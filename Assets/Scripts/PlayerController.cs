@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     public float lowMultiplier = 2;
     public float fallMultiplier =2.5f;
     private float originalGravityScale;
+    public float prebufferTime = .2f;
+    private float currentPrebufferTime;
+    private bool jumping = false;
 
     private void Start() 
     {
@@ -23,9 +26,22 @@ public class PlayerController : MonoBehaviour
 
         rb.linearVelocity = new Vector2(xInput * speedPlayer, rb.linearVelocity.y);
 
-        if(Input.GetButtonDown("Jump") && IsGrounded())
+        if(currentPrebufferTime > 0)
         {
+            currentPrebufferTime -=1*Time.deltaTime;
+        }
+
+        if(Input.GetButtonDown("Jump"))
+        {
+            currentPrebufferTime = prebufferTime;
+        }
+        jumping = !IsGrounded();
+        if(currentPrebufferTime >0 && IsGrounded() && !jumping)
+        {
+            rb.linearVelocityY = 0;
             rb.AddForce(Vector2.up * forceJump, ForceMode2D.Impulse);
+            
+            jumping = true;
         }    
 
         if(rb.linearVelocityY >0 )
