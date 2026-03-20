@@ -2092,6 +2092,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
   anim: {fileID: 80346908}
   playerController: {fileID: 1633977942}
+  visual: {fileID: 80346907}
 --- !u!1 &1747681819
 GameObject:
   m_ObjectHideFlags: 0
