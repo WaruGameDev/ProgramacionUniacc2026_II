@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = originalGravityScale;
         }
     }
-    bool IsGrounded()
+    public bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, 
         LayerMask.GetMask("Ground"));
